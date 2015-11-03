@@ -1,22 +1,42 @@
+//Global Variables
+int screenX = 500;
+int screenY = 500;
+
 USS_Enterprise USS_EnterpriseD;
+Star[] stars;
 
 public void setup() 
 {
-  size(500,500);
-  stroke(0);
-  strokeWeight(2);
+  size(screenX,screenY);
+  //Create Spaceship
   USS_EnterpriseD = new USS_Enterprise();
+  //======================
+  //Create Stars
+  stars = new Star[150];
+  for(int i = 0; i < stars.length; i++) {
+    stars[i] = new Star();
+    stars[i].show();
+  }
+  //======================
 }
 
 public void draw() 
 {
+  //Fade Background
   pushMatrix();
   fill(0,0,0,10);
   rect(-1,-1,501,501);
   popMatrix();
+  //=================
+  //Stars
+  for(int i = 0; i < stars.length; i++) {
+    stars[i].show();
+  }
+  //=================
+  //Starship
   USS_EnterpriseD.show();
   USS_EnterpriseD.move();
-  //your code here
+  //=================
 }
 
 public void keyPressed() {
@@ -79,12 +99,13 @@ class USS_Enterprise extends Floater
     }
     //==========================
     // Initialize SpaceShip Variables
-    myColor = color(#75A3A3);//#8291B0
+    myFill = color(#75A3A3);//#8291B0
+    myStroke = color(#87CEFA);
+    myStrokeWeight = 1.6;
     myCenterX = 250;
     myCenterY = 250;
     //===============================
   }
-  
   //Encapsulation
   public void setX(int x) { myCenterX = x; }
   public int getX() { return (int)myCenterX; }   
@@ -103,22 +124,32 @@ class USS_Enterprise extends Floater
 }
 
 class Star {
-  int x, y;
-  
+  private int x;
+  private int y;
+  private int sizeX; //ellipse width
+  private int sizeY; //ellipse height
   Star() {
-    
+    x = (int)(Math.random()*(screenX + 1));
+    y = (int)(Math.random()*(screenY + 1));
+    sizeX = (int)(Math.random()*6+3);
+    sizeY = (int)(Math.random()*6+3);
   }
-  
-  
-  
-  
+
+  public void show() {
+    stroke(0);
+    fill(255);
+    ellipse(x,y,sizeX,sizeY);
+  }
 }
+
 abstract class Floater //Do NOT modify the Floater class! Make changes in the SpaceShip class 
 {   
   protected int corners;  //the number of corners, a triangular floater has 3   
   protected float[] xCorners;   
   protected float[] yCorners;   
-  protected int myColor;   
+  protected int myFill;
+  protected float myStrokeWeight;
+  protected int myStroke;
   protected double myCenterX, myCenterY; //holds center coordinates   
   protected double myDirectionX, myDirectionY; //holds x and y coordinates of the vector for direction of travel   
   protected double myPointDirection; //holds current direction the ship is pointing in degrees    
@@ -160,7 +191,7 @@ abstract class Floater //Do NOT modify the Floater class! Make changes in the Sp
     }    
     else if (myCenterX<0)
     {     
-      myCenterX = width;    
+      myCenterX = width;
     }    
     if(myCenterY >height)
     {    
@@ -173,14 +204,14 @@ abstract class Floater //Do NOT modify the Floater class! Make changes in the Sp
   }   
   public void show ()  //Draws the floater at the current position  
   {             
-    fill(myColor);   
-    stroke(myColor);    
+    fill(myFill);   
+    strokeWeight(myStrokeWeight);
+    stroke(myStroke);    
     //convert degrees to radians for sin and cos         
     double dRadians = myPointDirection*(Math.PI/180);                 
     int xRotatedTranslated, yRotatedTranslated;    
     beginShape();      
-    stroke(#87CEFA);
-    strokeWeight(1.6);   
+ 
     for(int nI = 0; nI < corners; nI++)    
     {     
       //rotate and translate the coordinates of the floater using current direction 
