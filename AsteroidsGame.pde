@@ -54,7 +54,7 @@ public void keyPressed() {
     
     //UP
     if (keyCode == UP) {
-      USS_EnterpriseD.accelerate(0.1);
+      USS_EnterpriseD.accelerateImpulse();
     }
     
     //DOWN
@@ -119,25 +119,41 @@ class USS_Enterprise extends Floater
   public double getPointDirection() { return myPointDirection; }
   //===========================
   
-  //Change SuperClass Actions
+  //Starship Impulse speed
+  public void accelerateImpulse() {
+      float previousX = (float)myCenterX;
+      float previousY = (float)myCenterY;
+      accelerate(0.1);
+      float currentX = (float)myCenterX;
+      float currentY = (float)myCenterY;
+
+      pushMatrix();
+      strokeWeight(3);
+      stroke(255);
+      line(previousX,previousY,currentX,currentY);
+      popMatrix();
+    }
+  //========================
 
 }
 
 class Star {
-  private int x;
-  private int y;
-  private int sizeX; //ellipse width
-  private int sizeY; //ellipse height
+  private int x,y; //Coordinates : Location
+  private int sizeX,sizeY; //ellipse width; //ellipse height
+  private int red,green,blue; //Color
   Star() {
     x = (int)(Math.random()*(screenX + 1));
     y = (int)(Math.random()*(screenY + 1));
-    sizeX = (int)(Math.random()*6+3);
-    sizeY = (int)(Math.random()*6+3);
+    sizeX = (int)(Math.random()*6+4);
+    sizeY = (int)(Math.random()*6+4);
+    red = (int)(Math.random()*256);
+    green = (int)(Math.random()*256);
+    blue = (int)(Math.random()*256);
   }
 
   public void show() {
     stroke(0);
-    fill(255);
+    fill(red,green,blue);
     ellipse(x,y,sizeX,sizeY);
   }
 }
@@ -213,7 +229,7 @@ abstract class Floater //Do NOT modify the Floater class! Make changes in the Sp
     beginShape();      
  
     for(int nI = 0; nI < corners; nI++)    
-    {     
+    {
       //rotate and translate the coordinates of the floater using current direction 
       xRotatedTranslated = (int)((xCorners[nI]* Math.cos(dRadians)) - (yCorners[nI] * Math.sin(dRadians))+myCenterX);     
       yRotatedTranslated = (int)((xCorners[nI]* Math.sin(dRadians)) + (yCorners[nI] * Math.cos(dRadians))+myCenterY);      
