@@ -1,8 +1,9 @@
 //Global Variables
-int screenX = 500;
+int screenX = 1000;
 int screenY = 500;
 
 USS_Enterprise USS_EnterpriseD;
+Asteroids Asteroid1;
 Star[] stars;
 
 public void setup() 
@@ -18,6 +19,9 @@ public void setup()
     stars[i].show();
   }
   //======================
+  //Create Asteroids
+  Asteroid1 = new Asteroids();
+  //======================
 }
 
 public void draw() 
@@ -25,7 +29,7 @@ public void draw()
   //Fade Background
   pushMatrix();
   fill(0,0,0,10);
-  rect(-1,-1,501,501);
+  rect(-1,-1,screenX+1,screenY+1);
   popMatrix();
   //=================
   //Stars
@@ -37,6 +41,9 @@ public void draw()
   USS_EnterpriseD.show();
   USS_EnterpriseD.move();
   //=================
+  //Asteroids
+  Asteroid1.show();
+  //================
 }
 
 public void keyPressed() {
@@ -54,7 +61,7 @@ public void keyPressed() {
     
     //UP
     if (keyCode == UP) {
-      USS_EnterpriseD.accelerateImpulse();
+      USS_EnterpriseD.accelerate(0.1);
     }
     
     //DOWN
@@ -67,16 +74,16 @@ public void keyPressed() {
 class USS_Enterprise extends Floater  
 {
   // Declare and/or Initialize Corner Variables
-  int[] coordinates = {2,-2, 3,-5, 6,-9, 8,-10, 13,-10, 13,-9, 17,-5, 18,-2, 18,2, 17,5, 13,9, 13,10, 8,10, 6,9, 3,5, 2,2, 2,-2, 
+  private int[] coordinates = {2,-2, 3,-5, 6,-9, 8,-10, 13,-10, 13,-9, 17,-5, 18,-2, 18,2, 17,5, 13,9, 13,10, 8,10, 6,9, 3,5, 2,2, 2,-2, 
                        -1,-3, -4,-7, 2,-7, 3,-8, 3,-10, 2,-11, -10,-11, -11,-10, -11,-8, -10,-7, -7,-7,
                        -7,7, -10,7, -11,8, -11,10, -10,11, 2,11, 3,10, 3,8, 2,7, -4,7, -1,3, 2,2};
-  int count = 0;
+  private int count = 0;
   //==============================================
   //Declare and/or Initialize SpaceShip Variables
   
   
   
-  USS_Enterprise() {
+  public USS_Enterprise() {
     // Create Corners
     corners = coordinates.length/2;
     xCorners = new float[corners];
@@ -87,13 +94,9 @@ class USS_Enterprise extends Floater
       if(count % 2 == 0) {
         cornerElement++;
         xCorners[cornerElement] = coordinates[count]*3/2;
-        println(cornerElement);
-        println(coordinates[count]);
       }
       else {
         yCorners[cornerElement] = coordinates[count]*3/2;
-        println(cornerElement);
-        println(coordinates[count]);
       }
     count++;
     }
@@ -120,21 +123,73 @@ class USS_Enterprise extends Floater
   //===========================
   
   //Starship Impulse speed
-  public void accelerateImpulse() {
-      float previousX = (float)myCenterX;
-      float previousY = (float)myCenterY;
-      accelerate(0.1);
-      float currentX = (float)myCenterX;
-      float currentY = (float)myCenterY;
+  // public void accelerateImpulse() {
+  //     float previousX = (float)myCenterX;
+  //     float previousY = (float)myCenterY;
+  //     accelerate(0.1);
+  //     float currentX = (float)myCenterX;
+  //     float currentY = (float)myCenterY;
 
-      pushMatrix();
-      strokeWeight(3);
-      stroke(255);
-      line(previousX,previousY,currentX,currentY);
-      popMatrix();
-    }
+  //     pushMatrix();
+  //     strokeWeight(3);
+  //     stroke(255);
+  //     line(previousX,previousY,currentX,currentY);
+  //     popMatrix();
+  //   }
   //========================
 
+}
+
+class Asteroids extends Floater {
+
+  // Declare and/or Initialize Corner Variables
+  private int[] coordinates = { 8,0, 0,8, -8,0, 0,8, 8,0};
+  private int count;
+  //==============================================
+  //Declare and/or Initialize Asteroids Variables
+  private int rotation;
+  //==============================================
+
+  public Asteroids() {
+    // Create Corners
+    corners = coordinates.length/2;
+    xCorners = new float[corners];
+    yCorners = new float[corners];
+    
+    int cornerElement = -1;
+    while(count < coordinates.length) {
+      if(count % 2 == 0) {
+        cornerElement++;
+        xCorners[cornerElement] = coordinates[count]*3/2;
+      }
+      else {
+        yCorners[cornerElement] = coordinates[count]*3/2;
+      }
+    count++;
+    }
+    //==========================
+
+    rotation = (int)(Math.random()*11-5);
+
+    myCenterX = 500;
+    myCenterY = 250;
+  }
+
+  public void move() {
+    rotate(rotation);
+  }
+  //Encapsulation
+  public void setX(int x) { myCenterX = x; }
+  public int getX() { return (int)myCenterX; }   
+  public void setY(int y) { myCenterY = y; }
+  public int getY() { return (int)myCenterY; }
+  public void setDirectionX(double x) { myDirectionX = x; }
+  public double getDirectionX() { return myDirectionX; }
+  public void setDirectionY(double y) { myDirectionY = y; }
+  public double getDirectionY() { return myDirectionY; }
+  public void setPointDirection(double degrees) { myPointDirection = degrees; }
+  public double getPointDirection() { return myPointDirection; }
+  //===========================
 }
 
 class Star {
@@ -181,13 +236,13 @@ abstract class Floater //Do NOT modify the Floater class! Make changes in the Sp
   abstract public double getPointDirection();
 
   //Accelerates the floater in the direction it is pointing (myPointDirection)   
-  public void accelerate (double dAmount)   
-  {          
+  public void accelerate (double dAmount)
+  {
     //convert the current direction the floater is pointing to radians    
     double dRadians =myPointDirection*(Math.PI/180);     
-    //change coordinates of direction of travel    
-    myDirectionX += ((dAmount) * Math.cos(dRadians));    
-    myDirectionY += ((dAmount) * Math.sin(dRadians));       
+    //change coordinates of direction of travel
+    myDirectionX += ((dAmount) * Math.cos(dRadians));
+    myDirectionY += ((dAmount) * Math.sin(dRadians));
   }   
   public void rotate (int nDegreesOfRotation)   
   {     
