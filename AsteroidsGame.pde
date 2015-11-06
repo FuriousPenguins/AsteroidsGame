@@ -38,8 +38,8 @@ public void draw()
   }
   //=================
   //Starship
-  USS_EnterpriseD.show();
   USS_EnterpriseD.move();
+  USS_EnterpriseD.show();
   //=================
   //Asteroids
   Asteroid1.show();
@@ -48,25 +48,48 @@ public void draw()
 
 public void keyPressed() {
   if (key == CODED) {
-    
     //LEFT
     if (keyCode == LEFT) {
-      USS_EnterpriseD.rotate(-15);
+      USS_EnterpriseD.setLeft(true);
     }
     
     //RIGHT
     if (keyCode == RIGHT) {
-      USS_EnterpriseD.rotate(15);
+      USS_EnterpriseD.setRight(true);
     }
     
     //UP
     if (keyCode == UP) {
-      USS_EnterpriseD.accelerate(0.1);
+      USS_EnterpriseD.setForward(true);
     }
     
     //DOWN
     if (keyCode == DOWN) {
-      USS_EnterpriseD.accelerate(-0.1);
+      USS_EnterpriseD.setBackward(true);
+    }
+  }
+}
+
+public void keyReleased() {
+  if (key == CODED) {
+    //LEFT
+    if (keyCode == LEFT) {
+      USS_EnterpriseD.setLeft(false);
+    }
+    
+    //RIGHT
+    if (keyCode == RIGHT) {
+      USS_EnterpriseD.setRight(false);
+    }
+    
+    //UP
+    if (keyCode == UP) {
+      USS_EnterpriseD.setForward(false);
+    }
+    
+    //DOWN
+    if (keyCode == DOWN) {
+      USS_EnterpriseD.setBackward(false);
     }
   }
 }
@@ -80,8 +103,12 @@ class USS_Enterprise extends Floater
   private int count = 0;
   //==============================================
   //Declare and/or Initialize SpaceShip Variables
-  
-  
+  private boolean turnLeft = false;
+  private boolean turnRight = false;
+  private boolean forward = false;
+  private boolean backward = false;
+
+  //==============================================
   
   public USS_Enterprise() {
     // Create Corners
@@ -120,8 +147,49 @@ class USS_Enterprise extends Floater
   public double getDirectionY() { return myDirectionY; }
   public void setPointDirection(double degrees) { myPointDirection = degrees; }
   public double getPointDirection() { return myPointDirection; }
+
+  public void setLeft(boolean x) { turnLeft = x; }
+  public void setRight(boolean x) { turnRight = x; }
+  public void setForward(boolean x) { forward = x; }
+  public void setBackward(boolean x) { backward = x; }
   //===========================
-  
+
+  public void move () 
+  {      
+    //change the x and y coordinates by myDirectionX and myDirectionY    
+    if(turnLeft == true) {
+      rotate(-3);
+    }
+    if(turnRight == true) {
+      rotate(3);
+    }
+    if(forward == true) {
+      accelerate(.05);
+    }   
+    if(backward == true) {
+      accelerate(-.05);
+    }
+    //wrap around screen    
+    if(myCenterX >width)
+    {     
+      myCenterX = 0;    
+    }    
+    else if (myCenterX<0)
+    {     
+      myCenterX = width;
+    }    
+    if(myCenterY >height)
+    {    
+      myCenterY = 0;    
+    }   
+    else if (myCenterY < 0)
+    {     
+      myCenterY = height;    
+    }
+    myCenterX += myDirectionX;    
+    myCenterY += myDirectionY; 
+  }
+
   //Starship Impulse speed
   // public void accelerateImpulse() {
   //     float previousX = (float)myCenterX;
@@ -143,7 +211,7 @@ class USS_Enterprise extends Floater
 class Asteroids extends Floater {
 
   // Declare and/or Initialize Corner Variables
-  private int[] coordinates = { 8,0, 0,8, -8,0, 0,8, 8,0};
+  private int[] coordinates = { 5,5, 5,-5, -5,-5, -5,5 };
   private int count;
   //==============================================
   //Declare and/or Initialize Asteroids Variables
@@ -151,6 +219,7 @@ class Asteroids extends Floater {
   //==============================================
 
   public Asteroids() {
+    myFill = color(255);
     // Create Corners
     corners = coordinates.length/2;
     xCorners = new float[corners];
@@ -272,7 +341,7 @@ abstract class Floater //Do NOT modify the Floater class! Make changes in the Sp
     {     
       myCenterY = height;    
     }   
-  }   
+  }
   public void show ()  //Draws the floater at the current position  
   {             
     fill(myFill);   
@@ -291,5 +360,5 @@ abstract class Floater //Do NOT modify the Floater class! Make changes in the Sp
       vertex(xRotatedTranslated,yRotatedTranslated);    
     }
     endShape(CLOSE);
-  }   
+  }
 } 
