@@ -5,6 +5,7 @@ int screenY = 500;
 USS_Enterprise USS_EnterpriseD;
 Asteroids Asteroid1;
 Star[] stars;
+Asteroids[] asteroids;
 
 public void setup() 
 {
@@ -16,7 +17,10 @@ public void setup()
   stars = new Star[150];
   for(int i = 0; i < stars.length; i++) {
     stars[i] = new Star();
-    stars[i].show();
+  }
+  asteroids = new Asteroids[20];
+  for(int i = 0; i < asteroids.length; i++) {
+    asteroids[i] = new Asteroids();
   }
   //======================
   //Create Asteroids
@@ -26,9 +30,10 @@ public void setup()
 
 public void draw() 
 {
+  ellipse(screenX/2,screenY/2,30,30);
   //Fade Background
   pushMatrix();
-  fill(0,0,0,10);
+  fill(0,0,0,50);
   rect(-1,-1,screenX+1,screenY+1);
   popMatrix();
   //=================
@@ -37,13 +42,24 @@ public void draw()
     stars[i].show();
   }
   //=================
+  //Asteroid
+  // for(int i = 0; i < asteroids.length; i++) {
+  //   asteroids[i].move();
+  //   asteroids[i].show();
+  // }
+  Asteroid1.move();
+  Asteroid1.show();
+  //================
   //Starship
   USS_EnterpriseD.move();
   USS_EnterpriseD.show();
   //=================
-  //Asteroids
-  Asteroid1.show();
-  //================
+  //Collision Check
+  float distance = sqrt( sq(USS_EnterpriseD.getX() - Asteroid1.getX()) + sq(USS_EnterpriseD.getY() - Asteroid1.getY()) );
+  if (distance < 30) {
+    println(distance);
+  }
+  //=================
 }
 
 public void keyPressed() {
@@ -67,6 +83,10 @@ public void keyPressed() {
     if (keyCode == DOWN) {
       USS_EnterpriseD.setBackward(true);
     }
+  }
+  if(key == 'h') {
+    USS_EnterpriseD.setX( (int)(Math.random()*(screenX+1)) );
+    USS_EnterpriseD.setY( (int)(Math.random()*(screenX+1)) );
   }
 }
 
@@ -138,9 +158,9 @@ class USS_Enterprise extends Floater
   }
   //Encapsulation
   public void setX(int x) { myCenterX = x; }
-  public int getX() { return (int)myCenterX; }   
+  public float getX() { return (float)myCenterX; }   
   public void setY(int y) { myCenterY = y; }
-  public int getY() { return (int)myCenterY; }
+  public float getY() { return (float)myCenterY; }
   public void setDirectionX(double x) { myDirectionX = x; }
   public double getDirectionX() { return myDirectionX; }
   public void setDirectionY(double y) { myDirectionY = y; }
@@ -237,21 +257,46 @@ class Asteroids extends Floater {
     count++;
     }
     //==========================
+    //Set velocity of Asteroid
+    int randomDirection = (int)(Math.random()*4+1);
 
+    int randomX = (int)(Math.random()*2+2); //Random velocity in the X direction
+    int randomY = (int)(Math.random()*2+2); //Random velocity in the Y direction
+
+    if (randomDirection == 1) { //Use Quadrants in Math, ex. Quadrant 1,2,3,4
+      myDirectionX = randomX;
+      myDirectionY = randomY;
+    }
+    else if(randomDirection == 2) {
+      myDirectionX = -randomX;
+      myDirectionY = randomY;
+    }
+    else if(randomDirection == 3) {
+      myDirectionX = -randomX;
+      myDirectionY = -randomY;
+    }
+    else if(randomDirection == 4) {
+      myDirectionX = randomX;
+      myDirectionY = -randomY;
+    }
+
+
+    //==========================
     rotation = (int)(Math.random()*11-5);
 
-    myCenterX = 500;
-    myCenterY = 250;
+    myCenterX = (int)(Math.random()*1001);;
+    myCenterY = 0;
   }
 
   public void move() {
     rotate(rotation);
+    super.move();
   }
   //Encapsulation
   public void setX(int x) { myCenterX = x; }
-  public int getX() { return (int)myCenterX; }   
+  public float getX() { return (float)myCenterX; }   
   public void setY(int y) { myCenterY = y; }
-  public int getY() { return (int)myCenterY; }
+  public float getY() { return (float)myCenterY; }
   public void setDirectionX(double x) { myDirectionX = x; }
   public double getDirectionX() { return myDirectionX; }
   public void setDirectionY(double y) { myDirectionY = y; }
@@ -294,9 +339,9 @@ abstract class Floater //Do NOT modify the Floater class! Make changes in the Sp
   protected double myDirectionX, myDirectionY; //holds x and y coordinates of the vector for direction of travel   
   protected double myPointDirection; //holds current direction the ship is pointing in degrees    
   abstract public void setX(int x);
-  abstract public int getX();   
+  abstract public float getX();   
   abstract public void setY(int y);   
-  abstract public int getY();   
+  abstract public float getY();   
   abstract public void setDirectionX(double x);   
   abstract public double getDirectionX();   
   abstract public void setDirectionY(double y);   
