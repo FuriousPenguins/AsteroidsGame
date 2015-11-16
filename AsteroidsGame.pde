@@ -18,7 +18,7 @@ public void setup()
   for(int i = 0; i < stars.length; i++) {
     stars[i] = new Star();
   }
-  asteroids = new Asteroids[20];
+  asteroids = new Asteroids[10];
   for(int i = 0; i < asteroids.length; i++) {
     asteroids[i] = new Asteroids();
   }
@@ -42,11 +42,11 @@ public void draw()
     stars[i].show();
   }
   //=================
-  //Asteroid
-  // for(int i = 0; i < asteroids.length; i++) {
-  //   asteroids[i].move();
-  //   asteroids[i].show();
-  // }
+  // Asteroid
+  for(int i = 0; i < asteroids.length; i++) {
+    asteroids[i].move();
+    asteroids[i].show();
+  }
   Asteroid1.move();
   Asteroid1.show();
   //================
@@ -249,10 +249,10 @@ class Asteroids extends Floater {
     while(count < coordinates.length) {
       if(count % 2 == 0) {
         cornerElement++;
-        xCorners[cornerElement] = coordinates[count]*3/2;
+        xCorners[cornerElement] = coordinates[count]*3;
       }
       else {
-        yCorners[cornerElement] = coordinates[count]*3/2;
+        yCorners[cornerElement] = coordinates[count]*3;
       }
     count++;
     }
@@ -284,8 +284,12 @@ class Asteroids extends Floater {
     //==========================
     rotation = (int)(Math.random()*11-5);
 
-    myCenterX = (int)(Math.random()*1001);;
-    myCenterY = 0;
+    myCenterX = (int)(Math.random()*501+500);;
+    myCenterY = (int)(Math.random()*screenY+1);
+
+    myStrokeWeight = 5;
+    myFill = #778572;
+    myStroke = #638756;
   }
 
   public void move() {
