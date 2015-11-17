@@ -3,9 +3,9 @@ int screenX = 1000;
 int screenY = 500;
 
 USS_Enterprise USS_EnterpriseD;
-Asteroids Asteroid1;
 Star[] stars;
-Asteroids[] asteroids;
+ArrayList<Asteroids> asteroids = new ArrayList<Asteroids>();
+Bullet[] bullets;
 
 public void setup() 
 {
@@ -18,13 +18,13 @@ public void setup()
   for(int i = 0; i < stars.length; i++) {
     stars[i] = new Star();
   }
-  asteroids = new Asteroids[10];
-  for(int i = 0; i < asteroids.length; i++) {
-    asteroids[i] = new Asteroids();
+  for(int i = 0; i < 10; i++) {
+    asteroids.add(new Asteroids());
   }
+
+  bullets = new Bullet[0];
   //======================
   //Create Asteroids
-  Asteroid1 = new Asteroids();
   //======================
 }
 
@@ -43,22 +43,20 @@ public void draw()
   }
   //=================
   // Asteroid
-  for(int i = 0; i < asteroids.length; i++) {
-    asteroids[i].move();
-    asteroids[i].show();
+  for(int i = 0; i < asteroids.size(); i++) {
+    //Collision Check
+     float distance = sqrt( sq(USS_EnterpriseD.getX() - asteroids.get(i).getX()) + sq(USS_EnterpriseD.getY() - asteroids.get(i).getY()) );
+     if (distance < 30) {
+       println(distance);
+     }
+    //=================
+    asteroids.get(i).move();
+    asteroids.get(i).show();
   }
-  Asteroid1.move();
-  Asteroid1.show();
   //================
   //Starship
   USS_EnterpriseD.move();
   USS_EnterpriseD.show();
-  //=================
-  //Collision Check
-  float distance = sqrt( sq(USS_EnterpriseD.getX() - Asteroid1.getX()) + sq(USS_EnterpriseD.getY() - Asteroid1.getY()) );
-  if (distance < 30) {
-    println(distance);
-  }
   //=================
 }
 
@@ -309,7 +307,31 @@ class Asteroids extends Floater {
   public double getPointDirection() { return myPointDirection; }
   //===========================
 }
+class Bullet extends Floater {
+  public Bullet() {
+    myCenterX = USS_EnterpriseD.getX();
+    myCenterY = USS_EnterpriseD.getY();
+    myPointDirection = USS_EnterpriseD.getPointDirection();
+    double dRadians =myPointDirection*(Math.PI/180);
+    myDirectionX = 5 * Math.cos(dRadians) + USS_EnterpriseD.getDirectionX();
+    myDirectionY = 5 * Math.sin(dRadians) + USS_EnterpriseD.getDirectionY();
+  }
 
+  public void show() {
+    ellipse((float)myCenterX,(float)myCenterY,10,10);
+  }
+  //Encapsulation
+  public void setX(int x) { myCenterX = x; }
+  public float getX() { return (float)myCenterX; }   
+  public void setY(int y) { myCenterY = y; }
+  public float getY() { return (float)myCenterY; }
+  public void setDirectionX(double x) { myDirectionX = x; }
+  public double getDirectionX() { return myDirectionX; }
+  public void setDirectionY(double y) { myDirectionY = y; }
+  public double getDirectionY() { return myDirectionY; }
+  public void setPointDirection(double degrees) { myPointDirection = degrees; }
+  public double getPointDirection() { return myPointDirection; }
+}
 class Star {
   private int x,y; //Coordinates : Location
   private int sizeX,sizeY; //ellipse width; //ellipse height
