@@ -5,7 +5,7 @@ int screenY = 500;
 USS_Enterprise USS_EnterpriseD;
 Star[] stars;
 ArrayList<Asteroids> asteroids = new ArrayList<Asteroids>();
-Bullet[] bullets;
+ArrayList<Bullet> bullets = new ArrayList<Bullet>();
 
 public void setup() 
 {
@@ -18,14 +18,15 @@ public void setup()
   for(int i = 0; i < stars.length; i++) {
     stars[i] = new Star();
   }
+  //======================
+  //Create Asteroids
   for(int i = 0; i < 10; i++) {
     asteroids.add(new Asteroids());
   }
-
-  bullets = new Bullet[0];
   //======================
-  //Create Asteroids
-  //======================
+  //Create Bullets
+  bullets.add(new Bullet());
+  //
 }
 
 public void draw() 
@@ -57,7 +58,14 @@ public void draw()
   //Starship
   USS_EnterpriseD.move();
   USS_EnterpriseD.show();
+  USS_EnterpriseD.shoot();
   //=================
+  //Bullets
+  for(int i = bullets.size()-1; i > -1; i--) {
+    bullets.get(i).show();
+    bullets.get(i).move();
+  }
+  //
 }
 
 public void keyPressed() {
@@ -112,6 +120,13 @@ public void keyReleased() {
   }
 }
 
+public void mousePressed() {
+  USS_EnterpriseD.setShoot(true);
+}
+
+public void mouseReleased() {
+  USS_EnterpriseD.setShoot(false);
+}
 class USS_Enterprise extends Floater  
 {
   // Declare and/or Initialize Corner Variables
@@ -125,6 +140,7 @@ class USS_Enterprise extends Floater
   private boolean turnRight = false;
   private boolean forward = false;
   private boolean backward = false;
+  private boolean shoot = false;
 
   //==============================================
   
@@ -170,6 +186,7 @@ class USS_Enterprise extends Floater
   public void setRight(boolean x) { turnRight = x; }
   public void setForward(boolean x) { forward = x; }
   public void setBackward(boolean x) { backward = x; }
+  public void setShoot(boolean x) {shoot = x;}
   //===========================
 
   public void move () 
@@ -206,6 +223,14 @@ class USS_Enterprise extends Floater
     }
     myCenterX += myDirectionX;    
     myCenterY += myDirectionY; 
+  }
+
+  public void shoot() {
+    if(shoot == true) {
+      if(millis() % 100 < 5) {
+        bullets.add(new Bullet());
+      }
+    }
   }
 
   //Starship Impulse speed
