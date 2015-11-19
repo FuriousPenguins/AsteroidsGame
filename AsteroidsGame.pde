@@ -45,14 +45,20 @@ public void draw()
   //=================
   // Asteroid
   for(int i = 0; i < asteroids.size(); i++) {
-    //Collision Check
-     float distance = sqrt( sq(USS_EnterpriseD.getX() - asteroids.get(i).getX()) + sq(USS_EnterpriseD.getY() - asteroids.get(i).getY()) );
-     if (distance < 30) {
-       println(distance);
-     }
-    //=================
     asteroids.get(i).move();
     asteroids.get(i).show();
+    //Collision Check
+     float shipDistance = sqrt( sq(USS_EnterpriseD.getX() - asteroids.get(i).getX()) + sq(USS_EnterpriseD.getY() - asteroids.get(i).getY()) );
+     if (shipDistance < 30) {
+       println(shipDistance);
+     }
+     for(int a = bullets.size()-1; a > -1; a--) {
+      float bulletDistance = sqrt( sq(asteroids.get(i).getX() - bullets.get(a).getX()) + sq(asteroids.get(i).getY() - bullets.get(a).getY()) );
+      if (bulletDistance < 30) {
+        asteroids.remove(a);
+      }
+     }
+    //=================
   }
   //================
   //Starship
@@ -64,6 +70,9 @@ public void draw()
   for(int i = bullets.size()-1; i > -1; i--) {
     bullets.get(i).show();
     bullets.get(i).move();
+    if(bullets.get(i).getApoptosis() == true) {
+      bullets.remove(i);
+    }
   }
   //
 }
@@ -333,6 +342,7 @@ class Asteroids extends Floater {
   //===========================
 }
 class Bullet extends Floater {
+  private boolean apoptosis = false;
   public Bullet() {
     myCenterX = USS_EnterpriseD.getX();
     myCenterY = USS_EnterpriseD.getY();
@@ -356,6 +366,20 @@ class Bullet extends Floater {
   public double getDirectionY() { return myDirectionY; }
   public void setPointDirection(double degrees) { myPointDirection = degrees; }
   public double getPointDirection() { return myPointDirection; }
+  public boolean getApoptosis() { return apoptosis; }
+
+  public void move ()   //move the floater in the current direction of travel
+  {      
+    //change the x and y coordinates by myDirectionX and myDirectionY       
+    myCenterX += myDirectionX;    
+    myCenterY += myDirectionY;     
+
+    //wrap around screen    
+    if(myCenterX >width || myCenterX<0 || myCenterY >height || myCenterY < 0)
+    {         
+      apoptosis = true;
+    }     
+  }
 }
 class Star {
   private int x,y; //Coordinates : Location
