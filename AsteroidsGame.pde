@@ -4,6 +4,8 @@ int screenY = 500;
 
 USS_Enterprise USS_EnterpriseD;
 Star[] stars;
+//Array of Asteroids
+//Asteroids[] asteroids1;
 ArrayList<Asteroids> asteroids = new ArrayList<Asteroids>();
 ArrayList<Bullet> bullets = new ArrayList<Bullet>();
 
@@ -23,6 +25,11 @@ public void setup()
   for(int i = 0; i < 10; i++) {
     asteroids.add(new Asteroids());
   }
+  //Array Asteroids
+  //asteroids1 = new Asteroids[10];
+  //for(int i =0; i < asteroids1.length;i++) {
+   //asteroids1[i] = new Asteroids();
+  //}
   //======================
   //Create Bullets
   bullets.add(new Bullet());
@@ -44,6 +51,9 @@ public void draw()
   }
   //=================
   // Asteroid
+  if(asteroids.size() == 0) {
+    asteroids.add(new Asteroids());
+  }
   for(int i = 0; i < asteroids.size(); i++) {
     asteroids.get(i).move();
     asteroids.get(i).show();
@@ -52,10 +62,13 @@ public void draw()
      if (shipDistance < 30) {
        println(shipDistance);
      }
-     for(int a = bullets.size()-1; a > -1; a--) {
+     for(int a = 0; a < bullets.size(); a++) {
       float bulletDistance = sqrt( sq(asteroids.get(i).getX() - bullets.get(a).getX()) + sq(asteroids.get(i).getY() - bullets.get(a).getY()) );
       if (bulletDistance < 30) {
-        asteroids.remove(a);
+        asteroids.remove(i);
+        if(i != 0) {
+          i--;
+        }
       }
      }
     //=================
