@@ -69,10 +69,14 @@ public void draw()
         if(i != 0) {
           i--;
         }
+        else {
+          break;
+        }
       }
      }
+   }
     //=================
-  }
+
   //================
   //Starship
   USS_EnterpriseD.move();
