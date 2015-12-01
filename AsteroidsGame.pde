@@ -119,6 +119,8 @@ public void keyPressed() {
   if(key == 'h') {
     USS_EnterpriseD.setX( (int)(Math.random()*(screenX+1)) );
     USS_EnterpriseD.setY( (int)(Math.random()*(screenX+1)) );
+    USS_EnterpriseD.setDirectionX(0);
+    USS_EnterpriseD.setDirectionY(0);
   }
 }
 
