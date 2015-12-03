@@ -168,7 +168,7 @@ class USS_Enterprise extends Floater
   private boolean turnRight = false;
   private boolean forward = false;
   private boolean backward = false;
-  private boolean shoot = false;
+  private boolean shootBoolean = false;
 
   //==============================================
   
@@ -214,7 +214,7 @@ class USS_Enterprise extends Floater
   public void setRight(boolean x) { turnRight = x; }
   public void setForward(boolean x) { forward = x; }
   public void setBackward(boolean x) { backward = x; }
-  public void setShoot(boolean x) {shoot = x;}
+  public void setShoot(boolean x) {shootBoolean = x;}
   //===========================
 
   public void move () 
@@ -254,7 +254,7 @@ class USS_Enterprise extends Floater
   }
 
   public void shoot() {
-    if(shoot == true) {
+    if(shootBoolean == true) {
       if(millis() % 100 < 5) {
         bullets.add(new Bullet());
       }
